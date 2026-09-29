@@ -6,8 +6,19 @@ def emotion_detector(text_to_analyze): # This function takes string input
     myobj =  { "raw_document": { "text": text_to_analyze } } # Dictionary with text to analyze
     header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"} # Headers required for API request
     response = requests.post(url, json = myobj, headers=header)  # Send a POST request to the API with the text and headers
+    
+    if response.status_code == 400:
+        return {
+            'anger' : None,
+            'disgust': None,
+            'fear': None,
+            'joy' : None, 
+            'sadness' : None,
+            'dominant_emotion' : None
+        }
+
     formatted_response = json.loads(response.text) # response text passed as argument to json
-    # print(formatted_response)
+  
     # Extract the emotion label and score 
     emotion_predictions = formatted_response['emotionPredictions'][0]['emotion']
     # Finding the dominant emotion based on the score
